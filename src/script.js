@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import GUI from 'lil-gui';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { RGBELoader } from 'three/examples/jsm/Addons.js';
 
 /**
  * Debug
@@ -62,11 +63,22 @@ brickAOTexture.wrapT = THREE.RepeatWrapping;
 brickAOTexture.repeat.set(2, 2);
 brickAOTexture.colorSpace = THREE.SRGBColorSpace;
 
+
 /**
  * Base Setup
  */
 const canvas = document.querySelector('canvas.webgl');
 const scene = new THREE.Scene();
+
+const rgbeLoader = new RGBELoader();
+rgbeLoader.load('/textures/environment/autumn_field_puresky_1k.hdr', function(texture) {
+    texture.mapping = THREE.EquirectangularReflectionMapping;
+
+    scene.environment = texture;
+    scene.background = texture;
+
+    renderer.render(scene, camera);
+});
 
 const sizes = {
     width: window.innerWidth,
