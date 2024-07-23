@@ -63,6 +63,35 @@ brickAOTexture.wrapT = THREE.RepeatWrapping;
 brickAOTexture.repeat.set(2, 2);
 brickAOTexture.colorSpace = THREE.SRGBColorSpace;
 
+const woodColorTexture = textureLoader.load('/textures/base/bark_willow_02_diff_1k.jpg');
+woodColorTexture.wrapS = THREE.RepeatWrapping;
+woodColorTexture.wrapT = THREE.RepeatWrapping;
+
+woodColorTexture.colorSpace = THREE.SRGBColorSpace;
+
+const woodDisplacementTexture = textureLoader.load('/textures/base/bark_willow_02_disp_1k.jpg');
+
+
+woodDisplacementTexture.colorSpace = THREE.SRGBColorSpace;
+
+const woodARMTexture = textureLoader.load('/textures/base/bark_willow_02_arm_1k.jpg');
+
+woodARMTexture.colorSpace = THREE.SRGBColorSpace;
+
+const woodAOTexture = textureLoader.load('/textures/base/bark_willow_02_ao_1k.jpg');
+
+woodAOTexture.colorSpace = THREE.SRGBColorSpace;
+
+const woodNormalTexture = textureLoader.load('/textures/base/bark_willow_02_nor_1k.jpg');
+
+woodNormalTexture.colorSpace = THREE.SRGBColorSpace;
+
+const woodRoughTexture = textureLoader.load('/textures/base/bark_willow_02_rough_1k.jpg');
+
+woodRoughTexture.colorSpace = THREE.SRGBColorSpace;
+
+
+
 
 /**
  * Base Setup
@@ -134,12 +163,35 @@ const planeMaterial = new THREE.MeshStandardMaterial({
     metalnessMap: snowARMTexture
 });
 
-const snowPlaneGeometry = new THREE.PlaneGeometry(10, 10, 128, 128);
+const snowPlaneGeometry = new THREE.CircleGeometry(2.835,128);
 const snowPlane = new THREE.Mesh(snowPlaneGeometry, planeMaterial);
 snowPlane.rotation.x = -Math.PI / 2;
 snowPlane.receiveShadow = true;
 snowPlane.renderOrder = 1;
+snowPlane.position.y -= 1;
 scene.add(snowPlane);
+
+const snowSemiSphereGeometry = new THREE.SphereGeometry(2.9, 128, 128, 0, Math.PI * 2, 0, Math.PI / 2.5);
+const snowSemiCircle = new THREE.Mesh(snowSemiSphereGeometry, planeMaterial);
+snowSemiCircle.rotation.x = -Math.PI;
+scene.add(snowSemiCircle);
+
+const cylinderGeometry = new THREE.CylinderGeometry(3, 3, 1, 128);
+const cylinderMaterial = new THREE.MeshStandardMaterial({
+    normalMap: woodNormalTexture,
+    displacementMap: woodDisplacementTexture,
+    displacementScale: 0.01,
+    aoMap: woodAOTexture,
+    aoMapIntensity: 1,
+    roughnessMap: woodRoughTexture,
+    roughness: 1,
+    metalness: 1,
+    metalnessMap: woodARMTexture,
+    map: woodColorTexture
+});
+const cylinder = new THREE.Mesh(cylinderGeometry, cylinderMaterial);
+cylinder.position.y -= 2.5;
+scene.add(cylinder);
 
 /**
  * Snowglobe Group
@@ -177,8 +229,8 @@ const sphereMaterial = new THREE.MeshPhysicalMaterial({
     metalness: 0,
     roughness: 0,
     transmission: 1,
-    thickness: 1,
-    ior: 1.5,
+    thickness: 0.5,
+    ior: 1.0,
     reflectivity: 1,
 
 });
@@ -207,7 +259,7 @@ const houseBrickMaterial = new THREE.MeshStandardMaterial({
 
 const houseWallGeometry1 = new THREE.BoxGeometry(2, 1, 2, 256, 256, 256);
 const houseMesh1 = new THREE.Mesh(houseWallGeometry1, houseBrickMaterial);
-houseMesh1.position.y += 0.5;
+houseMesh1.position.y -= 0.5;
 houseMesh1.renderOrder = 1;
 houseGroup.add(houseMesh1);
 
@@ -215,15 +267,18 @@ const houseWallGeometry2 = new THREE.BoxGeometry(1, 1, 1, 256, 256, 256);
 const houseMesh2 = new THREE.Mesh(houseWallGeometry2, houseBrickMaterial);
 houseMesh2.position.set(1.5, 0.5, 0);
 houseMesh2.renderOrder = 1;
+houseMesh2.position.y -= 1;
 houseGroup.add(houseMesh2);
 
 houseGroup.position.x -= 0.5;
 
+
 /**
  * Fog
- */
-const fog = new THREE.Fog('#262837', 1, 15);
-scene.fog = fog;
+//  */
+// const fog = new THREE.Fog('#FFFFFF', 1, 15);
+// scene.fog = fog;
+// fog.
 
 /**
  * Animation Loop
